@@ -2,16 +2,21 @@ import logo from '../../assets/images/logo.svg';
 import './Header.css';
 
 export class Header {
+  constructor(navigateCallback) {
+    this.navigate = navigateCallback;
+  }
+
   render() {
     return `
       <header class='header'>
         <div class='logoWrap'>
           <img src='${logo}' alt='Logo'>
+          <span class="app-title">Task Manager</span>
         </div>
         <nav>
           <ul>
-            <li><a id="add-project">Add Project</a></li>
-            <li><a id="view-projects">View Projects</a></li>
+            <li><a id="nav-dashboard" class="nav-link">Dashboard</a></li>
+            <li><a id="nav-add-project" class="nav-link">Add Project</a></li>
           </ul>
         </nav>
       </header>
@@ -19,20 +24,22 @@ export class Header {
   }
 
   attachEventListeners() {
-    const addProjectBtn = document.getElementById('add-project');
-    const viewProjectsBtn = document.getElementById('view-projects');
+    const dashboardBtn = document.getElementById('nav-dashboard');
+    const addProjectBtn = document.getElementById('nav-add-project');
 
-    if (addProjectBtn) {
-      addProjectBtn.addEventListener('click', () => {
-        console.log('Add project clicked');
-        // TODO: Implement add project functionality
+    if (dashboardBtn && this.navigate) {
+      dashboardBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.navigate('dashboard');
       });
     }
 
-    if (viewProjectsBtn) {
-      viewProjectsBtn.addEventListener('click', () => {
-        console.log('View projects clicked');
-        // TODO: Implement view projects functionality
+    if (addProjectBtn) {
+      addProjectBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (this.navigate) {
+          this.navigate('add-project');
+        }
       });
     }
   }

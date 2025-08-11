@@ -9,6 +9,9 @@ export class AppState {
     this.selectedProjectId = null;
     this.projectService = new ProjectService();
     this.taskService = new TaskService();
+    // Task filtering and sorting state
+    this.taskFilter = 'all';
+    this.taskSort = 'created';
   }
 
   initialize() {
@@ -91,5 +94,22 @@ export class AppState {
     this.selectedProjectId = null;
     this.projectService.clearStorage();
     this.initialize();
+  }
+
+  // Task filter and sort methods
+  getTaskFilter() {
+    return this.taskFilter;
+  }
+
+  setTaskFilter(filter) {
+    this.taskFilter = filter;
+  }
+
+  getTaskSort() {
+    return this.taskSort;
+  }
+
+  setTaskSort(sort) {
+    this.taskSort = sort;
   }
 }

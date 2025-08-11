@@ -2,16 +2,23 @@ import { formatDate } from '../../utils/dateUtils';
 import './Dashboard.css';
 
 export class Dashboard {
-  constructor(appState, rerenderCallback) {
+  constructor(appState, rerenderCallback, navigateCallback) {
     this.appState = appState;
     this.rerender = rerenderCallback;
+    this.navigate = navigateCallback;
   }
 
   render() {
     const projects = this.appState.getProjects().map(p => p.toJSON());
     
     return `
-      <h1>Dashboard</h1>
+      <div class="dashboard-header">
+        <h1>Dashboard</h1>
+        <button class="btn btn-primary" id="add-project-btn">
+          <span class="btn-icon">+</span>
+          Add Project
+        </button>
+      </div>
       <div class="grid grid-auto-fit">
         ${projects.map(project => `
           <div class="card" data-project-id="${project.id}">
@@ -31,7 +38,7 @@ export class Dashboard {
               `).join('')}
             </ul>
             <div class='card-actions'>
-              <button class='btn btn-primary' data-project-id="${project.id}">Select Project</button>
+              <button class='btn btn-primary' data-project-id="${project.id}">View Project</button>
               <button class='btn btn-danger' data-project-id="${project.id}">Delete Project</button>
             </div>
           </div>
@@ -41,14 +48,26 @@ export class Dashboard {
   }
 
   attachEventListeners() {
-    // Select Project buttons
+    // Add Project button
+    const addProjectBtn = document.getElementById('add-project-btn');
+    if (addProjectBtn) {
+      addProjectBtn.addEventListener('click', () => {
+        if (this.navigate) {
+          this.navigate('add-project');
+        }
+      });
+    }
+
+    // View Project buttons
     document.querySelectorAll('.btn-primary').forEach(button => {
       const projectId = button.getAttribute('data-project-id');
       if (projectId) {
         button.addEventListener('click', (e) => {
           this.appState.selectProject(projectId);
-          console.log(`Selected project: ${projectId}`);
-          if (this.rerender) this.rerender();
+          console.log(`Navigating to project: ${projectId}`);
+          if (this.navigate) {
+            this.navigate('project');
+          }
         });
       }
     });
@@ -66,13 +85,21 @@ export class Dashboard {
       }
     });
 
-    // View Task buttons
+    // View Task buttons - Navigate to project with task highlighted
     document.querySelectorAll('.btn-success').forEach(button => {
       const taskId = button.getAttribute('data-task-id');
       if (taskId) {
         button.addEventListener('click', (e) => {
-          console.log(`View task: ${taskId}`);
-          // TODO: Add task viewing logic here
+          // Find which project contains this task
+          const projects = this.appState.getProjects();
+          const projectWithTask = projects.find(project => 
+            project.tasks.some(task => task.id === taskId)
+          );
+          
+          if (projectWithTask) {
+            this.appState.selectProject(projectWithTask.id);
+            this.navigate('project');
+          }
         });
       }
     });

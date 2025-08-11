@@ -2,11 +2,12 @@ import { Header } from '../components/Header/Header';
 import { Dashboard } from '../components/Dashboard/Dashboard';
 
 export class DashboardView {
-  constructor(appState, rerenderCallback) {
+  constructor(appState, rerenderCallback, navigateCallback) {
     this.appState = appState;
     this.rerender = rerenderCallback;
-    this.header = new Header();
-    this.dashboard = new Dashboard(appState, rerenderCallback);
+    this.navigate = navigateCallback;
+    this.header = new Header(navigateCallback);
+    this.dashboard = new Dashboard(appState, rerenderCallback, navigateCallback);
   }
 
   render() {
@@ -14,23 +15,18 @@ export class DashboardView {
     
     return `
       ${this.header.render()}
-      ${!selectedProject ? `<h1>No Project Selected</h1>` : `
-        <main>
-          ${this.dashboard.render()}
+      <main class="container">
+        ${this.dashboard.render()}
+        <div class="dashboard-actions">
           <button class='btn clear-all-btn' id="clear-projects">Clear All Projects</button>
-        </main>
-      `}
+        </div>
+      </main>
     `;
   }
 
   attachEventListeners() {
     this.header.attachEventListeners();
-    
-    const selectedProject = this.appState.getSelectedProject();
-    if (selectedProject) {
-      this.dashboard.attachEventListeners();
-    }
-
+    this.dashboard.attachEventListeners();
     this.attachClearProjectsListener();
   }
 
