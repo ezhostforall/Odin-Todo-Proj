@@ -1,6 +1,5 @@
-import './styles/main.css';
-import { app } from './modules/ui'
+import App from './app';
 
-app.innerHTML = `
-  <h1>Initial Commit</h1>
-`;
+document.addEventListener('DOMContentLoaded', () => {
+  new App();
+});
