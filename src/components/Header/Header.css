@@ -1,10 +1,12 @@
 .header {
   display: flex;
+  max-width: 1200px;
   align-items: center;
   justify-content: space-between;
   padding: 10px 20px;
   background-color: #f8f9fa;
   border-bottom: 1px solid #dee2e6;
+  margin: 0 auto;
 }
 
 .logoWrap {

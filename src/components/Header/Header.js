@@ -10,7 +10,6 @@ export class Header {
     return `
       <header class='header'>
         <div class='logoWrap'>
-          <img src='${logo}' alt='Logo'>
           <span class="app-title">Task Manager</span>
         </div>
         <nav>
